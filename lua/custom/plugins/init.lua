@@ -2,4 +2,21 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+return {
+	"nvim-tree/nvim-tree.lua",
+	version = "*",
+	dependencies = {
+		"nvim-tree/nvim-web-devicons",
+	},
+	config = function()
+		require("nvim-tree").setup {
+			sort_by = "case_sensitive",
+			renderer = {
+				group_empty = true,
+			},
+			filters = {
+				dotfiles = true,
+			},
+		}
+	end,
+}

@@ -41,6 +41,10 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+--- disable netrw at the very start of your init.lua (strongly advised)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -264,6 +268,7 @@ vim.keymap.set('n', '<C-s>', ':w<CR>')
 vim.keymap.set('n', '<C-S-s>', ':wa<CR>:mks! ~/session.vim')
 vim.keymap.set('i', '<C-s>', '<ESC>:w<CR>')
 vim.keymap.set('i', '<C-S-s>', '<ESC>:wa<CR>:mks! ~/session.vim')
+vim.keymap.set('n', '<leader>of', ':NvimTreeFindFileToggle<CR>', { desc = '[O]pen [F]ile Tree' })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -521,5 +526,3 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
--- ElCoco's realm
