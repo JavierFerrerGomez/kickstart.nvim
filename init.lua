@@ -182,6 +182,15 @@ require('lazy').setup({
     end,
   },
   {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
+  },
+  {
     'lfv89/vim-interestingwords'
   },
   {
@@ -259,6 +268,9 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+vim.o.shiftwidth = 2
+vim.g.tabstop = 2
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -290,6 +302,27 @@ vim.keymap.set('n', '<Leader>r', ':%s/<C-R><C-W>//g<Left><Left>')
 vim.keymap.set('n', '<Leader>j', ':HopWord<CR>')
 vim.keymap.set('n', '<Leader>m', ':wa | make<CR>')
 
+vim.keymap.set('n', '<Leader>fg', ':Git<CR>', { desc = "Fugitive Git interface" })
+vim.keymap.set('n', '<Leader>fd', ':Gvdiffsplit! HEAD<CR>', { desc = "Fugitive Diff current buffer" })
+
+vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>",
+  { silent = true, noremap = true }
+)
+vim.keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>",
+  { silent = true, noremap = true }
+)
+vim.keymap.set("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>",
+  { silent = true, noremap = true }
+)
+vim.keymap.set("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>",
+  { silent = true, noremap = true }
+)
+vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>",
+  { silent = true, noremap = true }
+)
+vim.keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>",
+  { silent = true, noremap = true }
+)
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -334,6 +367,7 @@ vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>so', require('telescope.builtin').oldfiles, { desc = '[S]earch [O]ld files' })
+vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[R]esume previous search' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -352,7 +386,7 @@ require('nvim-treesitter.configs').setup {
       init_selection = '<c-space>',
       node_incremental = '<c-space>',
       scope_incremental = '<c-s>',
-      node_decremental = '<M-space>',
+      node_decremental = '<s-space>',
     },
   },
   textobjects = {
