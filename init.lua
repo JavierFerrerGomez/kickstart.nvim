@@ -181,7 +181,20 @@ require('lazy').setup({
       pcall(require('nvim-treesitter.install').update { with_sync = true })
     end,
   },
-
+  {
+    'lfv89/vim-interestingwords'
+  },
+  {
+    'wikitopian/hardmode'
+  },
+  {
+    'phaazon/hop.nvim',
+    branch = 'v2', -- optional but strongly recommended
+    config = function()
+      -- you can configure Hop the way you like here; see :h hop-config
+      require 'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
+    end
+  },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -264,11 +277,18 @@ vim.keymap.set('n', '<Leader>vr', ':source $MYVIMRC<CR>', { silent = true })
 vim.keymap.set('n', '<Leader>ve', ':tabe $MYVIMRC<CR>', { silent = true })
 
 -- Windows style. Old habits never die.
-vim.keymap.set('n', '<C-s>', ':w<CR>')
+vim.keymap.set('n', '<C-s>', ':wa<CR>')
 vim.keymap.set('n', '<C-S-s>', ':wa<CR>:mks! ~/session.vim')
-vim.keymap.set('i', '<C-s>', '<ESC>:w<CR>')
+vim.keymap.set('i', '<C-s>', '<ESC>:wa<CR>')
 vim.keymap.set('i', '<C-S-s>', '<ESC>:wa<CR>:mks! ~/session.vim')
 vim.keymap.set('n', '<leader>of', ':NvimTreeFindFileToggle<CR>', { desc = '[O]pen [F]ile Tree' })
+vim.keymap.set('n', '<F4>', ':cnext<CR>')
+vim.keymap.set('n', '<F3>', ':cprev<CR>')
+vim.keymap.set('i', '<F4>', '<ESC>:cnext<CR>')
+vim.keymap.set('i', '<F3>', '<ESC>:cprev<CR>')
+vim.keymap.set('n', '<Leader>r', ':%s/<C-R><C-W>//g<Left><Left>')
+vim.keymap.set('n', '<Leader>j', ':HopWord<CR>')
+vim.keymap.set('n', '<Leader>m', ':wa | make<CR>')
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -386,6 +406,8 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
+
+vim.api.nvim_command("command! -nargs=1 Browse silent execute '!brave-browser <f-args>'")
 
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.

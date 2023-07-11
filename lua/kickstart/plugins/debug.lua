@@ -9,7 +9,6 @@
 return {
   -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
-
   -- NOTE: And you can specify dependencies as well
   dependencies = {
     -- Creates a beautiful debugger UI
@@ -20,9 +19,10 @@ return {
     'jay-babu/mason-nvim-dap.nvim',
 
     -- Add your own debuggers here
-    'leoluz/nvim-dap-go',
+    -- 'leoluz/nvim-dap-go',
+    --
+    'theHamsta/nvim-dap-virtual-text',
   },
-
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
@@ -32,17 +32,17 @@ return {
       -- reasonable debug configurations
       automatic_setup = true,
 
+      -- You can provide additional configuration to the handlers,
+      -- see mason-nvim-dap README for more information
+      handlers = {},
+
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
+        --'delve',
       },
     }
-
-    -- You can provide additional configuration to the handlers,
-    -- see mason-nvim-dap README for more information
-    require('mason-nvim-dap').setup_handlers()
 
     -- Basic debugging keymaps, feel free to change to your liking!
     vim.keymap.set('n', '<F5>', dap.continue)
@@ -71,15 +71,40 @@ return {
           step_back = 'b',
           run_last = '▶▶',
           terminate = '⏹',
+          disconnect = "⏏",
         },
       },
     }
+    -- toggle to see last session result. Without this ,you can't see session output in case of unhandled exception.
+    vim.keymap.set("n", "<F7>", dapui.toggle)
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     -- Install golang specific config
-    require('dap-go').setup()
+    -- require('dap-go').setup()
+
+    dap.adapters.cppdbg = {
+      id = 'cppdbg',
+      type = 'executable',
+      command = '/home/javier/.local/share/nvim/mason/bin/OpenDebugAD7',
+    }
+
+    dap.configurations.cpp = {
+      {
+        name = "Launch file",
+        type = "cppdbg",
+        request = "launch",
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = vim.fn.getcwd(),
+        stopAtEntry = false,
+      },
+    }
+
+    dap.configurations.c = dap.configurations.cpp
+    dap.configurations.rust = dap.configurations.cpp
   end,
 }
