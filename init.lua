@@ -75,7 +75,6 @@ require('lazy').setup({
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
-
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -88,7 +87,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -177,9 +176,10 @@ require('lazy').setup({
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
-    config = function()
-      pcall(require('nvim-treesitter.install').update { with_sync = true })
-    end,
+    build = ':TSUpdate',
+    -- config = function()
+    --   pcall(require('nvim-treesitter.install').update { with_sync = true })
+    -- end,
   },
   {
     "folke/trouble.nvim",
@@ -204,10 +204,13 @@ require('lazy').setup({
       require 'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
     end
   },
+  {
+    'jose-elias-alvarez/null-ls.nvim'
+  },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  require 'kickstart.plugins.autoformat',
+  -- require 'kickstart.plugins.autoformat',
   require 'kickstart.plugins.debug',
 
   -- NOTE: The import below automatically adds your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -268,9 +271,7 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
-vim.o.shiftwidth = 2
-vim.g.tabstop = 2
-
+vim.o.timeoutlen = 2000
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -281,48 +282,6 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- Useful scape. it removes highlighs and exits terminal mode
-vim.keymap.set({ 'n', 't' }, '<Leader><Esc>', '<C-\\><C-N>:noh<CR>:cclose<CR>:lclose<CR><Esc>', { silent = true })
-
--- Shortcuts to edit and refresh this file
-vim.keymap.set('n', '<Leader>vr', ':source $MYVIMRC<CR>', { silent = true })
-vim.keymap.set('n', '<Leader>ve', ':tabe $MYVIMRC<CR>', { silent = true })
-
--- Windows style. Old habits never die.
-vim.keymap.set('n', '<C-s>', ':wa<CR>')
-vim.keymap.set('n', '<C-S-s>', ':wa<CR>:mks! ~/session.vim')
-vim.keymap.set('i', '<C-s>', '<ESC>:wa<CR>')
-vim.keymap.set('i', '<C-S-s>', '<ESC>:wa<CR>:mks! ~/session.vim')
-vim.keymap.set('n', '<leader>of', ':NvimTreeFindFileToggle<CR>', { desc = '[O]pen [F]ile Tree' })
-vim.keymap.set('n', '<F4>', ':cnext<CR>')
-vim.keymap.set('n', '<F3>', ':cprev<CR>')
-vim.keymap.set('i', '<F4>', '<ESC>:cnext<CR>')
-vim.keymap.set('i', '<F3>', '<ESC>:cprev<CR>')
-vim.keymap.set('n', '<Leader>r', ':%s/<C-R><C-W>//g<Left><Left>')
-vim.keymap.set('n', '<Leader>j', ':HopWord<CR>')
-vim.keymap.set('n', '<Leader>m', ':wa | make<CR>')
-
-vim.keymap.set('n', '<Leader>fg', ':Git<CR>', { desc = "Fugitive Git interface" })
-vim.keymap.set('n', '<Leader>fd', ':Gvdiffsplit! HEAD<CR>', { desc = "Fugitive Diff current buffer" })
-
-vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>",
-  { silent = true, noremap = true }
-)
-vim.keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>",
-  { silent = true, noremap = true }
-)
-vim.keymap.set("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>",
-  { silent = true, noremap = true }
-)
-vim.keymap.set("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>",
-  { silent = true, noremap = true }
-)
-vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>",
-  { silent = true, noremap = true }
-)
-vim.keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>",
-  { silent = true, noremap = true }
-)
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -367,7 +326,8 @@ vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>so', require('telescope.builtin').oldfiles, { desc = '[S]earch [O]ld files' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[R]esume previous search' })
+vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 'Previous [Search] [R]esume' })
+vim.keymap.set('n', '<leader>st', require('telescope.builtin').treesitter, { desc = '[S]earch [T]reesitter' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -506,11 +466,46 @@ local servers = {
       telemetry = { enable = false },
     },
   },
+  -- efm = {
+  --   rootMarkers = { ".git/" },
+  --   languages = {
+  --     javascript = {
+  --       {
+  --         formatCommand = "prettier --stdin-filepath ${INPUT}",
+  --         formatStdin = true,
+  --         env = {
+  --           string.format('PRETTIERD_DEFAULT_CONFIG=%s',
+  --             vim.fn.expand('~/RDDWork/w3/.prettierrc.js')),
+  --         },
+  --       }
+  --     },
+  --     typescript = {
+  --       {
+  --         formatCommand = "prettier --stdin-filepath ${INPUT}",
+  --         formatStdin = true,
+  --         env = {
+  --           string.format('PRETTIERD_DEFAULT_CONFIG=%s',
+  --             vim.fn.expand('~/RDDWork/w3/.prettierrc.js')),
+  --         },
+  --       }
+  --     }
+  --   },
+  --   filetypes = {
+  --     "javascript",
+  --     "javascriptreact",
+  --     "javascript.jsx",
+  --     "typescript",
+  --     "typescript.tsx",
+  --     "typescriptreact",
+  --     -- "less",
+  --     -- "scss",
+  --     -- "css",
+  --   },
+  -- },
 }
 
 -- Setup neovim lua configuration
 require('neodev').setup()
-
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -580,5 +575,18 @@ cmp.setup {
   },
 }
 
+-- local lspconfig = require 'lspconfig'
+-- local configs = require 'lspconfig.configs'
+-- configs.solidity = {
+--   default_config = {
+--     cmd = {'nomicfoundation-solidity-language-server', '--stdio'},
+--     filetypes = { 'solidity' },
+--     root_dir = lspconfig.util.find_git_ancestor,
+--     single_file_support = true,
+--   },
+-- }
+-- lspconfig.solidity.setup {}
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+require('config.keymaps')
