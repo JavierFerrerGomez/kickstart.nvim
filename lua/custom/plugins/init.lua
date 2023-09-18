@@ -44,7 +44,5 @@ return {
 			require 'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
 		end
 	},
-	{
-		'jose-elias-alvarez/null-ls.nvim'
-	},
+	{ 'mfussenegger/nvim-treehopper' },
 }
