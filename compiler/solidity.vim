@@ -6,7 +6,7 @@ let current_compiler = "compiler"
 let s:cpo_save = &cpo
 set cpo&vim
 
-CompilerSet makeprg=yarn\ hardhat\ compile\ 
+CompilerSet makeprg=npx\ hardhat\ compile\ 
 "&&\ \./_lint_contracts.sh
 CompilerSet errorformat=%WWarning:\ %m,%C%*[\ ]\-\->\ %f:%l:%c:,%Z%m,
       \%EParserError:\ %m,%C%*[\ ]\-\->\ %f:%l:%c:,%Z%m,

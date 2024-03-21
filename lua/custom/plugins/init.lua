@@ -34,9 +34,6 @@ return {
 		'lfv89/vim-interestingwords'
 	},
 	{
-		'wikitopian/hardmode'
-	},
-	{
 		'phaazon/hop.nvim',
 		branch = 'v2', -- optional but strongly recommended
 		config = function()
